@@ -4,7 +4,8 @@ import os
 
 app = Flask(__name__)
 TODO_FILE = "todos.json"
-API_KEY = "super-secret-98765"  # 🛡️ Change this to your real secret
+import os
+API_KEY = os.environ.get("TRMNL_API_KEY")
 
 def load_todos():
     if os.path.exists(TODO_FILE):
