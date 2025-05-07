@@ -29,10 +29,19 @@ def set_todos():
     save_todos(todos[:10])
     return jsonify({"status": "ok", "count": len(todos)})
 
+import os
+
 @app.route('/open_get/<token>', methods=['GET'])
 def open_get(token):
-    if token != os.getenv("TRMNL_TOKEN"):
+    expected_token = os.getenv("TRMNL_TOKEN")
+    print("🔐 Incoming token:", token)
+    print("✅ Expected token:", expected_token)
+
+    if token != expected_token:
+        print("⛔ Token mismatch!")
         abort(403)
+    
+    print("📦 Sending todos:", load_todos())
     return jsonify({"items": load_todos()})
 
 @app.route('/get_todos', methods=['GET'])
