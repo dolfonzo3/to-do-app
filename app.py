@@ -29,9 +29,10 @@ def set_todos():
     save_todos(todos[:10])
     return jsonify({"status": "ok", "count": len(todos)})
 
-@app.route('/open_get', methods=['GET'])
-def open_get():
-    print("🌐 Public access from TRMNL!")
+@app.route('/open_get/<token>', methods=['GET'])
+def open_get(token):
+    if token != os.getenv("TRMNL_TOKEN"):
+        abort(403)
     return jsonify({"items": load_todos()})
 
 @app.route('/get_todos', methods=['GET'])
