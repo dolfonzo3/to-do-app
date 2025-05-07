@@ -41,4 +41,4 @@ def get_todos():
     print("📦 Sending todos:", load_todos())
     return jsonify({"items": load_todos()})
 
-add debug logs for TRMNL polling test
+# add debug logs for TRMNL polling test
