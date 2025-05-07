@@ -31,6 +31,14 @@ def set_todos():
 
 @app.route('/get_todos', methods=['GET'])
 def get_todos():
+    print("✅ TRMNL is trying to fetch data...")
+    print("🔐 Header received:", request.headers.get("x-api-key"))
+    
     if not is_authorized(request):
+        print("⛔ Unauthorized request!")
         abort(403)
+    
+    print("📦 Sending todos:", load_todos())
     return jsonify({"items": load_todos()})
+
+add debug logs for TRMNL polling test
