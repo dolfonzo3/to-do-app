@@ -4,7 +4,6 @@ import os
 
 app = Flask(__name__)
 TODO_FILE = "todos.json"
-import os
 API_KEY = os.environ.get("TRMNL_API_KEY")
 
 def load_todos():
@@ -22,17 +21,25 @@ def is_authorized(req):
 
 @app.route('/set_todos', methods=['POST'])
 def set_todos():
+    print("📥 /set_todos called")
+    print("🌍 IP address:", request.remote_addr)
+    print("🔐 Header received:", request.headers.get("x-api-key"))
+
     if not is_authorized(request):
+        print("⛔ Unauthorized request!")
         abort(403)
+
     data = request.json
     todos = data.get("items", [])
     save_todos(todos[:10])
+    print("💾 Saved todos:", todos[:10])
     return jsonify({"status": "ok", "count": len(todos)})
-
-import os
 
 @app.route('/open_get/<token>', methods=['GET'])
 def open_get(token):
+    print("📥 /open_get called")
+    print("🌍 IP address:", request.remote_addr)
+
     expected_token = os.getenv("TRMNL_TOKEN")
     print("🔐 Incoming token:", token)
     print("✅ Expected token:", expected_token)
@@ -40,20 +47,21 @@ def open_get(token):
     if token != expected_token:
         print("⛔ Token mismatch!")
         abort(403)
-    
-    print("📦 Sending todos:", load_todos())
-    return jsonify({"items": load_todos()})
+
+    todos = load_todos()
+    print("📦 Sending todos:", todos)
+    return jsonify({"items": todos})
 
 @app.route('/get_todos', methods=['GET'])
 def get_todos():
-    print("✅ TRMNL is trying to fetch data...")
+    print("📥 /get_todos called")
+    print("🌍 IP address:", request.remote_addr)
     print("🔐 Header received:", request.headers.get("x-api-key"))
-    
+
     if not is_authorized(request):
         print("⛔ Unauthorized request!")
         abort(403)
-    
-    print("📦 Sending todos:", load_todos())
-    return jsonify({"items": load_todos()})
 
-# add debug logs for TRMNL polling test
+    todos = load_todos()
+    print("📦 Sending todos:", todos)
+    return jsonify({"items": todos})
